@@ -44,17 +44,14 @@ export class ItemsService {
   }
 
   async findOne(id: number) {
-    return await this.itemsRepository.findOne({
+    return await this.itemsRepository.findOneOrFail({
       where: { id },
       relations: { listing: true, comments: true, tags: true },
     });
   }
 
   async update(id: number, updateItemDto: UpdateItemDto) {
-    const item = await this.itemsRepository.findOneBy({ id });
-    if (!item) {
-      throw new NotFoundException('Item not found');
-    }
+    const item = await this.itemsRepository.findOneByOrFail({ id });
 
     item.public = updateItemDto.public;
 
